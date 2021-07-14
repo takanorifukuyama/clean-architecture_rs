@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use anyhow::Result;
 use derive_more::Display;
-use serde::{de, Serialize, Serializer};
+use serde::{de, Deserialize, Serialize, Serializer};
 use ulid::Ulid;
 
 use crate::util::myerror::MyError;
@@ -48,5 +48,16 @@ impl Serialize for UserId {
         S: Serializer,
     {
         serializer.serialize_str(&self.0.to_string())
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Display, Serialize, Deserialize)]
+pub struct MailAddress(String);
+
+impl FromStr for MailAddress {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self> {
+        Ok(MailAddress(s.to_string()))
     }
 }
