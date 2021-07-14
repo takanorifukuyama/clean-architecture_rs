@@ -475,6 +475,8 @@ dependencies = [
  "derive-new",
  "derive_more",
  "prost",
+ "serde",
+ "thiserror",
  "tokio 1.8.1",
  "tonic",
  "tonic-build",
