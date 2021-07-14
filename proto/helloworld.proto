@@ -1,0 +1,14 @@
+syntax = "proto3";
+package javasparrow;
+
+service JavasparrowApi {
+  rpc Piyo (PiyoRequest) returns (PiyoResponse);
+}
+
+message PiyoRequest {
+  string name = 1;
+}
+
+message PiyoResponse {
+  string message = 1;
+}
