@@ -1,33 +1,15 @@
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::transport::Server;
 
-use javasparrow::javasparrow_api_server::{JavasparrowApi, JavasparrowApiServer};
-use javasparrow::{PiyoRequest, PiyoResponse};
-
-pub mod javasparrow {
-    tonic::include_proto!("javasparrow");
-}
-
-#[derive(Debug, Default)]
-pub struct MyJavasparrowApi {}
-
-#[tonic::async_trait]
-impl JavasparrowApi for MyJavasparrowApi {
-    async fn piyo(&self, request: Request<PiyoRequest>) -> Result<Response<PiyoResponse>, Status> {
-        println!("Got a request piyo");
-
-        let response = javasparrow::PiyoResponse {
-            message: format!("PiyoPiyo {}!", request.into_inner().name).into(),
-        };
-        Ok(Response::new(response))
-    }
-}
+use clean_architecture_rs::interface_adapter::controller::{
+    user::user_api_server::UserApiServer, UserHandler,
+};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "[::1]:50051".parse()?;
-    let jsr = MyJavasparrowApi::default();
+    let jsr = UserHandler::new();
     Server::builder()
-        .add_service(JavasparrowApiServer::new(jsr))
+        .add_service(UserApiServer::new(jsr))
         .serve(addr)
         .await?;
     Ok(())
